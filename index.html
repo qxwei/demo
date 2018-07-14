@@ -1,0 +1,84 @@
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+ 
+<div id="app">
+    <el-row>
+        <el-col :span="20">
+            <p>
+                <router-link to="/contact">contact</router-link>
+                <router-link to="/bar">news</router-link>
+            </p>
+            <router-view>hello IT部落</router-view>
+        </el-col>
+    </el-row>
+</div>
+
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-default/index.css">
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://cdn.bootcss.com/babel-standalone/6.25.0/babel.js"></script>
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.js"></script>
+<script type="text/babel" data-presets="es2015,stage-2">
+ 
+    var router = new VueRouter({
+        mode: 'history',
+        routes: [
+            {
+                path: '/bar',
+                component: {
+                    template: '<div>Home page</div>'
+                },
+            },
+            {
+                path: '/contact',
+                component: function(resolve, reject) {
+                    loadComponent('/topicZone.vue').then(resolve, reject);
+                }
+            }
+        ]
+    });
+ 
+    var app = new Vue({
+        el: '#app',
+        router: router,
+        data: {
+            activeIndex: '1',
+            activeIndex2: '1',
+        }, methods: {
+            handleSelect:function(key, keyPath) {
+                console.log(key, keyPath);
+            },handleOpen:function(key, keyPath) {
+                console.log(key, keyPath);
+            },handleClose:function(key, keyPath) {
+                console.log(key, keyPath);
+            }
+        }
+    });
+
+     function loadComponent(path) {
+            return new Promise(function (resolve, reject) {
+                $.ajax({
+                    type: "GET",
+                    url: path,
+                    dataType: 'text',
+                    success(data) {
+                        var result = null;
+                        var arr = [];
+                        arr = data.split('/*###*/');
+                        var template = arr[0];
+                        result = arr[1];
+                        result = result.replace('<script>', '').replace('<\/script>', '');
+                        result = eval(result);
+                        result.template = template;
+                        resolve(result);
+                    }, error(XMLHttpRequest, textStatus, errorThrown) {
+                        reject(textStatus);
+                    }
+                });
+            });
+        }
+</script>
+<style>
+    body{margin:0px}
+</style>
